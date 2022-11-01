@@ -16,4 +16,11 @@ VALUES ("Davy", "Jones", 2, 5),
     ("Johnny", "Appleseed", 4, 5),
     ("Count", "Dracula", 3, 5),
     ("Nikola", "Tesla", 1, 5),
-    ("Bill",  "Gates", 4, NULL)
+    ("Bill",  "Gates", 4, NULL),
+    ("Bobby",  "Garden", 1, 2),
+    ("Sherrell",  "Banks", 2, 3),
+    ("Tyler",  "Stlyes", 3, 3),
+    ("Natasha",  "Thick", 1, 3),
+    ("Kevin",  "Penkin", 2, 4),
+    ("Jared",  "Snow", 3, 4),
+    ("Morty",  "Frankenstein", 4, 2)

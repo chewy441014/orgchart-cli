@@ -1,28 +1,13 @@
-/*
-GIVEN a command-line application that accepts user input
-WHEN I start the application
-THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
-WHEN I choose to view all departments
-THEN I am presented with a formatted table showing department names and department ids
-WHEN I choose to view all roles
-THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
-WHEN I choose to view all employees
-THEN I am presented with a formatted table showing employee data, including employee ids, first names, last names, job titles, departments, salaries, and managers that the employees report to
-WHEN I choose to add a department
-THEN I am prompted to enter the name of the department and that department is added to the database
-WHEN I choose to add a role
-THEN I am prompted to enter the name, salary, and department for the role and that role is added to the database
-WHEN I choose to add an employee
-THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
-WHEN I choose to update an employee role
-THEN I am prompted to select an employee to update and their new role and this information is updated in the database
-*/
-
 // Import and require mysql2
 const mysql = require('mysql2');
+// Import and require inquirer
 const inquirer = require('inquirer');
+// Import and configure dotenv
 require('dotenv').config();
 
+// setup questions for inquirer
+// with this structure, the bulk of the flow is handled by the inquirer question object itself
+// when is used to ask questions based on previous choices
 const questions = [
   {
     type: 'list', name: 'menu', message: 'Select a database option: ', choices:
@@ -40,9 +25,12 @@ const questions = [
         "View Budgets of All Departments",
         "---- Quit ----"],
   },
+  // With each block of relevant questions, the related function which will use the user's input are listed
+  // addDepartment(name)
   {
     type: 'input', name: 'addDept', message: 'What is the department name? ', when: (answers) => answers.menu === "Add Department"
   },
+  // editDepartment(newName, id)
   {
     type: 'input', name: 'editDeptName', message: 'Enter the modified department name: ', when: (answers) => answers.menu === "Edit Department"
   },
@@ -97,6 +85,7 @@ const questions = [
 ];
 
 // Connect to database
+// Using the environment variables from .env file here
 const db = mysql.createConnection(
   {
     host: 'localhost',
@@ -107,7 +96,7 @@ const db = mysql.createConnection(
   console.log(`Connected to the org_chart database.`)
 );
 
-// Query database
+// function to view all departments
 function viewAllDepartments() {
   db.query(`SELECT 
   id AS "Dept Num", 
@@ -122,11 +111,10 @@ function viewAllDepartments() {
     console.log(`\n`);
     console.log(`\n`);
     console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
   });
 }
 
+// function to view all roles
 function viewAllRoles() {
   db.query(`SELECT 
   role.id AS "Role ID", 
@@ -143,11 +131,10 @@ function viewAllRoles() {
     console.log(`\n`);
     console.log(`\n`);
     console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
   });
 }
 
+// function to view all employees
 function viewAllEmployees() {
   db.query(`SELECT 
   employee.id AS ID,
@@ -169,11 +156,10 @@ function viewAllEmployees() {
     console.log(`\n`);
     console.log(`\n`);
     console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
   });
 }
 
+// function to add department name
 function addDepartment(name) {
   console.log(name);
   db.query(`INSERT INTO department (name) VALUES (?)`, name, (err, results) => {
@@ -181,16 +167,12 @@ function addDepartment(name) {
       console.log(err);
     }
     console.log(`\n`);
-    console.table(results);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
+    console.log("Changes made: ", results.affectedRows);
     console.log(`\n`);
   });
 }
 
+// function to edit department name for deparment id
 function editDepartment(newName, id) {
   const params = [newName, id];
   db.query(`UPDATE department SET name = ? WHERE id = ?`, params, (err, results) => {
@@ -198,16 +180,12 @@ function editDepartment(newName, id) {
       console.log(err);
     }
     console.log(`\n`);
-    console.table(results);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
+    console.log("Changes made: ", results.affectedRows);
     console.log(`\n`);
   });
 }
 
+// function to add a role
 function addRole(jobTitle, salary, department_id) {
   const values = [jobTitle, salary, department_id];
   console.log(values);
@@ -216,16 +194,12 @@ function addRole(jobTitle, salary, department_id) {
       console.log(err);
     }
     console.log(`\n`);
-    console.table(results);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
+    console.log("Changes made: ", results.affectedRows);
     console.log(`\n`);
   });
 }
 
+// function to add employee
 function addEmployee(firstName, lastName, roleID, managerID) {
   const values = [firstName, lastName, roleID, managerID];
   db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, values, (err, results) => {
@@ -233,16 +207,12 @@ function addEmployee(firstName, lastName, roleID, managerID) {
       console.log(err);
     }
     console.log(`\n`);
-    console.table(results);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
+    console.log("Changes made: ", results.affectedRows);
     console.log(`\n`);
   });
 }
 
+// function to update employee role
 function updateEmployeeRole(roleID, employeeID) {
   const values = [roleID, employeeID];
   const sql = `UPDATE employee SET role_id = ? WHERE id = ?;`;
@@ -251,16 +221,12 @@ function updateEmployeeRole(roleID, employeeID) {
       console.log(err);
     }
     console.log(`\n`);
-    console.table(results);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
+    console.log("Changes made: ", results.affectedRows);
     console.log(`\n`);
   });
 }
 
+// function to update employee manager
 function updateEmployeeManager(managerID, employeeID) {
   const values = [managerID, employeeID];
   const sql = `UPDATE employee SET manager_id = ? WHERE id = ?`;
@@ -269,16 +235,12 @@ function updateEmployeeManager(managerID, employeeID) {
       console.log(err);
     }
     console.log(`\n`);
-    console.table(results);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
+    console.log("Changes made: ", results.affectedRows);
     console.log(`\n`);
   });
 }
 
+// function to view employees by manager
 function viewEmployeesByManager(managerID) {
   const values = [managerID];
   const sql = `SELECT first_name AS "First Name", last_name AS "Last Name" FROM employee WHERE manager_id = ?`;
@@ -292,11 +254,10 @@ function viewEmployeesByManager(managerID) {
     console.log(`\n`);
     console.log(`\n`);
     console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
   });
 }
 
+// function to view employees by department
 function viewEmployeesByDepartment(departmentID) {
   const values = [departmentID];
   const sql = `SELECT first_name AS "First Name", last_name AS "Last Name" 
@@ -311,11 +272,10 @@ function viewEmployeesByDepartment(departmentID) {
     console.log(`\n`);
     console.log(`\n`);
     console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
   });
 }
 
+// function to view the budget for all departments
 function viewDepartmentBudgets() {
   const sql = `SELECT 
   department.name AS Department, 
@@ -332,12 +292,11 @@ function viewDepartmentBudgets() {
     console.log(`\n`);
     console.log(`\n`);
     console.log(`\n`);
-    console.log(`\n`);
-    console.log(`\n`);
-
   });
 }
 
+// recursively navigates through the inquirer prompt and passes the answers to a large switch case
+// process.exit on quit takes the user back to the terminal when they quit
 function questionLoop() {
   inquirer
     .prompt(questions)
@@ -350,79 +309,53 @@ function questionLoop() {
       }
     });
 }
-/*
-["View All Departments",
-        "View All Roles",
-        "View All Employees",
-        "Add Department", // needs user prompt
-        "Edit Department", // needs user prompt
-        "Add Role", // needs user prompt
-        "Add Employee", // needs user prompt
-        "Update Employee Role", // needs user prompt
-        "Update Employee Manager", // needs user prompt
-        "View Employee by Manager",
-        "View Employee by Department",
-        "View Budgets of All Departments",
-        "---- Quit ----"]
-*/
 
+// function to call the relevant database function based on the answers provided
+// each case corresponds to one of the selections on the main menu, 
+// the answers object is available with additional properties, for querying
 function answerHandler(answers) {
-  // To Do
-  // console.log(answers);
   let questionText = questions[0].choices;
   switch (answers.menu) {
     case questionText[0]:
-      // console.log(questionText[0], " AND ", answers.menu)
       viewAllDepartments();
       break;
     case questionText[1]:
-      // console.log(questionText[1], " AND ", answers.menu)
       viewAllRoles();
       break;
     case questionText[2]:
-      // console.log(questionText[2], " AND ", answers.menu)
       viewAllEmployees();
       break;
     case questionText[3]:
-      // console.log(questionText[3], " AND ", answers.menu)
       addDepartment(answers.addDept);
       break;
     case questionText[4]:
-      // console.log(questionText[4], " AND ", answers.menu)
       editDepartment(answers.editDeptName, answers.editDeptID);
       break;
     case questionText[5]:
-      // console.log(questionText[5], " AND ", answers.menu)
-      // console.log(answers);
       addRole(answers.addRoleJob, answers.addRoleSalary, answers.addRoleDeptID);
       break;
     case questionText[6]:
-      // console.log(questionText[6], " AND ", answers.menu)
       addEmployee(answers.addEmployeeFirst, answers.addEmployeeLast, answers.addEmployeeRole, answers.addEmployeeManager);
       break;
     case questionText[7]:
-      // console.log(questionText[7], " AND ", answers.menu)
       updateEmployeeRole(answers.updateEmployeeRoleID, answers.updateEmployeeID);
       break;
     case questionText[8]:
-      // console.log(questionText[8], " AND ", answers.menu)
       updateEmployeeManager(answers.updateManagerID, answers.updateManagerEmployeeID);
       break;
     case questionText[9]:
-      // console.log(questionText[9], " AND ", answers.menu)
       viewEmployeesByManager(answers.viewByManager);
       break;
     case questionText[10]:
-      // console.log(questionText[10], " AND ", answers.menu)
       viewEmployeesByDepartment(answers.viewByDept);
       break;
     case questionText[11]:
-      // console.log(questionText[11], " AND ", answers.menu)
       viewDepartmentBudgets();
       break;
   }
 }
 
+// function to start the program
 function onLoad() {
   questionLoop();
 }
