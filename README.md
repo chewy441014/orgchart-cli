@@ -1,7 +1,7 @@
 # Orgchart-cli
 
 ## Description
-Organize your business with a database with a simple command line tool. You can create employees, designate managers, set salaries, calculate department budgets, create new roles and departments, and more!
+Organize your business with a simple command line tool. You can create employees, designate managers, set salaries, calculate department budgets, create new roles and departments, and more!
 
 ## Usage
 After starting the app (see installation), move up and down with the arrow keys, select the operation you wish to perform and provide any relevant details. Once you have finished navigate to the option shown below and the program will stop running. 
