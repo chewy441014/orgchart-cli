@@ -1,0 +1,25 @@
+{
+  "name": "orgchart-cli",
+  "version": "1.0.0",
+  "description": "Create and manage a SQL based org chart in the command line",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chewy441014/orgchart-cli.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chewy441014/orgchart-cli/issues"
+  },
+  "homepage": "https://github.com/chewy441014/orgchart-cli#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.3.3"
+  }
+}
